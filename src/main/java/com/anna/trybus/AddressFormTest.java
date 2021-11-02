@@ -9,7 +9,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AddressFormTest {
     private WebDriver driver;
@@ -32,7 +34,8 @@ public class AddressFormTest {
         WebElement signInButton = driver.findElement(By.xpath("//*[@id=\"submit-login\"]"));
         signInButton.click();
 
-        WebElement addFirstAddress = driver.findElement(By.xpath("//*[@id=\"address-link\"]"));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement addFirstAddress = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"address-link\"]")));
         addFirstAddress.click();
     }
 
@@ -58,8 +61,14 @@ public class AddressFormTest {
         WebElement phoneInput = driver.findElement(By.name("phone"));
         phoneInput.sendKeys(phone);
 
-        WebElement saveButton = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/form/footer/button"));
-        saveButton.click();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        try {
+            WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/div/div/form/footer/button")));
+            saveButton.click();
+        } catch (org.openqa.selenium.StaleElementReferenceException ex) {
+            WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/div/div/form/footer/button")));
+            saveButton.click();
+        }
     }
 
 
